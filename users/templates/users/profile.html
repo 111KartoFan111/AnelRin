@@ -17,7 +17,6 @@
                 {% if user.profile.phone %}
                     <p class="card-text"><i class="fas fa-phone text-primary me-2"></i>{{ user.profile.phone }}</p>
                 {% endif %}
-                
                 {% if has_wedding %}
                     <a href="{% url 'wedding_edit' %}" class="btn btn-outline-primary mt-2">
                         <i class="fas fa-edit me-1"></i> Редактировать свадьбу
@@ -30,7 +29,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-8">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">

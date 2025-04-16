@@ -225,7 +225,6 @@ def add_to_cart(request, pk):
     else:
         messages.info(request, f'"{product.name}" уже в вашей коллекции!')
 
-    # 💡 Замена request.is_ajax()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'status': 'success'})
 

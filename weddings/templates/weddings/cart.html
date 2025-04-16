@@ -8,15 +8,15 @@
         height: 150px;
         object-fit: cover;
     }
-    
+
     .cart-item-card {
         transition: all 0.3s ease;
     }
-    
+
     .cart-item-card:hover {
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-    
+
     .note-text {
         max-height: 80px;
         overflow-y: auto;
@@ -56,7 +56,6 @@
                                     <small class="text-muted">{{ cart_item.product.category.name }}</small>
                                 </p>
                                 <p class="card-text fw-bold text-primary">{{ cart_item.product.price }} ₸</p>
-                                
                                 {% if cart_item.notes %}
                                     <div class="mb-3">
                                         <small class="text-muted">Ваши заметки:</small>
@@ -65,7 +64,6 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                
                                 <div class="d-flex justify-content-between mt-2">
                                     <div>
                                         <a href="{% url 'product_detail' cart_item.product.id %}" class="btn btn-sm btn-outline-primary">
@@ -75,7 +73,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </div>
-                                    <a href="{% url 'remove_from_cart' cart_item.id %}" class="btn btn-sm btn-outline-danger" 
+                                    <a href="{% url 'remove_from_cart' cart_item.id %}" class="btn btn-sm btn-outline-danger"
                                        onclick="return confirm('Вы уверены, что хотите удалить этот товар из коллекции?')">
                                         <i class="fas fa-trash"></i>
                                     </a>
