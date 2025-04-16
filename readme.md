@@ -8,23 +8,27 @@
 
 2. Создайте виртуальное окружение Python :
     ```bash
-        source venv/bin/activate
+    source venv/bin/activate
     ```
 
 3. Установите зависимости из файла requirements.txt
     ```bash
-pip install -r requirements.txt
+    pip install -r requirements.txt
+    ```
 
 4. Перейдите в папку проекта:
     ```bash
-cd wedding-planner
+    cd wedding-planner
+    ```
 
 5. Cоздайте суперпользователя :
     ```bash
-python manage.py createsuperuser
+    python manage.py createsuperuser
+    ```
 
 ## Запуск проекта
 
 Запустите сервер разработки:
    ```bash
-python manage.py runserver
+    python manage.py runserver
+    ```
