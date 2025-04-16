@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Редактирование заметок | Wedding Planner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>Редактирование заметок
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <img src="{{ cart_item.product.image.url }}" class="img-fluid rounded" alt="{{ cart_item.product.name }}">
+                    </div>
+                    <div class="col-md-9">
+                        <h4>{{ cart_item.product.name }}</h4>
+                        <span class="badge bg-primary">{{ cart_item.product.get_style_display }}</span>
+                        <span class="badge bg-secondary">{{ cart_item.product.category.name }}</span>
+                        <p class="mt-2 fw-bold text-primary">{{ cart_item.product.price }} ₸</p>
+                    </div>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group mt-3">
+                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                        <a href="{% url 'cart' %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

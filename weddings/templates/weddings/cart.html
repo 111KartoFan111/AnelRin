@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Моя коллекция | Wedding Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-image {
+        height: 150px;
+        object-fit: cover;
+    }
+    
+    .cart-item-card {
+        transition: all 0.3s ease;
+    }
+    
+    .cart-item-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .note-text {
+        max-height: 80px;
+        overflow-y: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1><i class="fas fa-heart me-2"></i>Моя коллекция</h1>
+        <p class="text-muted">Сохраненные идеи и товары для вашей свадьбы</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'gallery' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Добавить еще идеи
+        </a>
+    </div>
+</div>
+
+{% if cart_items %}
+    <div class="row">
+        {% for cart_item in cart_items %}
+            <div class="col-md-6 mb-4">
+                <div class="card cart-item-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ cart_item.product.image.url }}" class="img-fluid rounded-start cart-image" alt="{{ cart_item.product.name }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">{{ cart_item.product.name }}</h5>
+                                    <span class="badge bg-primary">{{ cart_item.product.get_style_display }}</span>
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">{{ cart_item.product.category.name }}</small>
+                                </p>
+                                <p class="card-text fw-bold text-primary">{{ cart_item.product.price }} ₸</p>
+                                
+                                {% if cart_item.notes %}
+                                    <div class="mb-3">
+                                        <small class="text-muted">Ваши заметки:</small>
+                                        <div class="note-text border p-2 rounded bg-light small">
+                                            {{ cart_item.notes }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="d-flex justify-content-between mt-2">
+                                    <div>
+                                        <a href="{% url 'product_detail' cart_item.product.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'update_cart_notes' cart_item.id %}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                    <a href="{% url 'remove_from_cart' cart_item.id %}" class="btn btn-sm btn-outline-danger" 
+                                       onclick="return confirm('Вы уверены, что хотите удалить этот товар из коллекции?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-heart fa-3x text-muted mb-3"></i>
+            <h4>Ваша коллекция пуста</h4>
+            <p class="text-muted">Добавляйте понравившиеся товары и идеи, чтобы создать коллекцию для вашей свадьбы</p>
+            <a href="{% url 'gallery' %}" class="btn btn-primary">
+                <i class="fas fa-images me-2"></i>Перейти в галерею
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

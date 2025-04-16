@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Регистрация | Wedding Planner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0 text-center">Регистрация</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary btn-lg mt-3" type="submit">Зарегистрироваться</button>
+                    </div>
+                </form>
+                <div class="border-top pt-3 mt-4 text-center">
+                    <small class="text-muted">
+                        Уже есть аккаунт? <a class="ms-2" href="{% url 'login' %}">Войти</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

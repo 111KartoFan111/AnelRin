@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Галерея идей | Wedding Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-card {
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .product-image {
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .product-price {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+    
+    .filter-section {
+        position: sticky;
+        top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1><i class="fas fa-images me-2"></i>Галерея идей</h1>
+        <p class="text-muted">Найдите вдохновение для вашей идеальной свадьбы</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Фильтры -->
+    <div class="col-md-3 mb-4">
+        <div class="card filter-section">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Фильтры</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" action="{% url 'gallery' %}">
+                    <div class="mb-3">
+                        <label for="id_category" class="form-label">Категория</label>
+                        {{ form.category }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_style" class="form-label">Стиль</label>
+                        {{ form.style }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Цена</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                {{ form.min_price }}
+                            </div>
+                            <div class="col-6">
+                                {{ form.max_price }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-2"></i>Применить
+                        </button>
+                        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-sync-alt me-2"></i>Сбросить
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Товары -->
+    <div class="col-md-9">
+        {% if products %}
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card product-card h-100">
+                            <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                            <span class="product-price">{{ product.price }} ₸</span>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text text-truncate">{{ product.description }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <span class="badge bg-primary">{{ product.get_style_display }}</span>
+                                    <span class="badge bg-secondary">{{ product.category.name }}</span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
+                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>По вашему запросу ничего не найдено. Попробуйте изменить параметры фильтра.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

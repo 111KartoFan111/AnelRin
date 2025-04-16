@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if is_new %}Создание свадьбы{% else %}Редактирование свадьбы{% endif %} | Wedding Planner
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    {% if is_new %}
+                        <i class="fas fa-heart me-2"></i>Создание свадьбы
+                    {% else %}
+                        <i class="fas fa-edit me-2"></i>Редактирование свадьбы
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group mt-3">
+                        <button class="btn btn-primary" type="submit">
+                            {% if is_new %}Создать{% else %}Сохранить{% endif %}
+                        </button>
+                        <a href="{% if is_new %}{% url 'home' %}{% else %}{% url 'profile' %}{% endif %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

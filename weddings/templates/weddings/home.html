@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Главная | Wedding Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.cosmos.so/48b41961-f10a-46b3-b609-73545996da04?format=jpeg') no-repeat center center;
+        background-size: cover;
+        color: white;
+        padding: 120px 0;
+        margin-bottom: 40px;
+        border-radius: 10px;
+    }
+    
+    .feature-box {
+        padding: 30px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .feature-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .feature-icon {
+        font-size: 40px;
+        margin-bottom: 20px;
+        color: var(--primary-hover);
+    }
+    
+    .product-card {
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .fas fa-images{
+        color: var(--primary-hover);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-4">Организуйте свадьбу своей мечты</h1>
+        <p class="lead mb-5">Планирование свадьбы еще никогда не было таким простым. Получите все необходимые инструменты в одном месте.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'checklist' %}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-tasks me-2"></i>Перейти к планированию
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-user-plus me-2"></i>Начать бесплатно
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-sign-in-alt me-2"></i>Войти
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Особенности сервиса -->
+<section class="mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Почему выбирают наш сервис</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-box text-center shadow-sm bg-white">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h4>Удобный чек-лист</h4>
+                    <p>Отслеживайте все задачи по подготовке к свадьбе, получайте умные напоминания о предстоящих делах.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-box text-center shadow-sm bg-white">
+                    <div class="feature-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h4>Галерея идей</h4>
+                    <p>Находите вдохновение для своей свадьбы в нашей обширной галерее, собирайте идеи для декора, платьев и многого другого.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-box text-center shadow-sm bg-white">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h4>AI-напоминания</h4>
+                    <p>Интеллектуальные напоминания помогут не пропустить ни одного важного этапа подготовки к вашему особому дню.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Популярные идеи -->
+{% if products %}
+<section class="mb-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Популярные идеи</h2>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card product-card h-100">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-truncate">{{ product.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary">{{ product.get_style_display }}</span>
+                            <span class="fw-bold">{{ product.price }} ₸</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-danger">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-3">
+            <a href="{% url 'gallery' %}" class="btn btn-primary">Посмотреть все идеи</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Как это работает -->
+<section class="mb-5 bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Как это работает</h2>
+        <div class="row">
+            <div class="col-md-3 text-center mb-4">
+                <div class="bg-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="fas fa-user-plus fa-2x text-primary"></i>
+                </div>
+                <h5 class="mt-3">Шаг 1</h5>
+                <p>Зарегистрируйтесь и создайте профиль свадьбы</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <div class="bg-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="fas fa-calendar-alt fa-2x text-primary"></i>
+                </div>
+                <h5 class="mt-3">Шаг 2</h5>
+                <p>Укажите дату и стиль свадьбы</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <div class="bg-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="fas fa-tasks fa-2x text-primary"></i>
+                </div>
+                <h5 class="mt-3">Шаг 3</h5>
+                <p>Получите персонализированный чек-лист подготовки</p>
+            </div>
+            <div class="col-md-3 text-center mb-4">
+                <div class="bg-white rounded-circle mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="fas fa-heart fa-2x text-primary"></i>
+                </div>
+                <h5 class="mt-3">Шаг 4</h5>
+                <p>Соберите идеи и планируйте идеальную свадьбу</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Отзывы -->
+<section class="mb-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Отзывы наших пользователей</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="card-text">"Благодаря Wedding Planner наша свадьба прошла идеально! Все задачи были распланированы, ничего не забыли. Очень удобные напоминания!"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="flex-shrink-0">
+                                <img src="https://cdn.cosmos.so/a1ce06a4-06be-4f47-9698-9537e4d845b9?format=jpeg" class="rounded-circle" width="48" height="60" alt="Мария">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Мария К.</h6>
+                                <small class="text-muted">Свадьба в июне 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="card-text">"Отличный сервис! Особенно понравилась галерея идей, я собрала целую коллекцию для нашей свадьбы в стиле рустик. Рекомендую всем невестам!"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="flex-shrink-0">
+                                <img src="https://cdn.cosmos.so/e8b736a2-615c-4444-bbbf-e18589410828?format=jpeg" class="rounded-circle" width="48" height="60" alt="Екатерина">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Екатерина Л.</h6>
+                                <small class="text-muted">Свадьба в августе 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3 text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="card-text">"Наконец-то нашел способ организовать всю подготовку! Мы с женой больше не спорим о задачах, все четко распределено. Чек-лист - это спасение!"</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="flex-shrink-0">
+                                <img src="https://cdn.cosmos.so/8b2717c7-0238-420c-a607-a1c9a03f97f1?format=jpeg" class="rounded-circle" width="48" height="60" alt="Алексей">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">Алексей В.</h6>
+                                <small class="text-muted">Свадьба в сентябре 2025</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Призыв к действию -->
+<section class="bg-primary text-white py-5 rounded">
+    <div class="container text-center">
+        <h2 class="mb-4">Готовы начать планирование свадьбы?</h2>
+        <p class="lead mb-4">Зарегистрируйтесь сейчас и получите доступ ко всем инструментам для организации идеальной свадьбы!</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'checklist' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-tasks me-2"></i>Перейти к планированию
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-user-plus me-2"></i>Зарегистрироваться бесплатно
+            </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

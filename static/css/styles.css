@@ -1,0 +1,637 @@
+/* Общие стили для Wedding Planner */
+
+:root {
+    --primary-color: #ff6b87;
+    --primary-hover: #ff4d6e;
+    --secondary-color: #6c757d;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --white: #ffffff;
+    --shadow: 0 5px 15px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+    --radius: 8px;
+    --radius-sm: 4px;
+}
+
+/* Основные стили */
+body {
+    font-family: 'Montserrat', 'Roboto', sans-serif;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #fcfcfc;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
+a {
+    text-decoration: none !important;
+    color: var(--primary-color);
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* Навигация */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-brand i {
+    color: var(--primary-color);
+    margin-right: 8px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: var(--transition);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #fff;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+}
+
+.dropdown-item {
+    padding: 8px 15px;
+    border-radius: var(--radius-sm);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Кнопки */
+.btn {
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: var(--transition);
+    box-shadow: none;
+    text-transform: none;
+}
+
+.btn:focus, .btn:active {
+    box-shadow: none;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Карточки */
+.card {
+    border-radius: var(--radius);
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 15px 20px;
+    background-color: #fff;
+}
+
+.card-header.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding: 15px 20px;
+    background-color: #fff;
+}
+
+/* Формы */
+.form-control {
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 10px 15px;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 135, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* Пользовательские классы */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                url('https://source.unsplash.com/random/1200x600/?wedding') no-repeat center center;
+    background-size: cover;
+    color: white;
+    padding: 120px 0;
+    margin-bottom: 40px;
+    border-radius: var(--radius);
+}
+
+/* Галерея/Продукты */
+.product-card {
+    transition: var(--transition);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.product-image {
+    object-fit: cover;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+}
+
+.badge {
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+/* Чек-лист */
+.task-card {
+    transition: var(--transition);
+    border-left: 4px solid transparent;
+}
+
+.task-card:hover {
+    box-shadow: var(--shadow);
+}
+
+.task-completed {
+    background-color: rgba(248, 249, 250, 0.7);
+}
+
+.task-completed .task-title {
+    text-decoration: line-through;
+    color: var(--secondary-color);
+}
+
+.task-overdue {
+    border-left-color: var(--danger-color);
+}
+
+.priority-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.priority-4 {
+    background-color: var(--danger-color);
+}
+
+.priority-3 {
+    background-color: var(--warning-color);
+}
+
+.priority-2 {
+    background-color: #17a2b8;
+}
+
+.priority-1 {
+    background-color: var(--success-color);
+}
+
+/* Footer */
+.footer {
+    background-color: #f8f9fa;
+    padding: 40px 0 20px;
+}
+
+.footer h5 {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.footer a {
+    color: #333;
+    transition: var(--transition);
+}
+
+.footer a:hover {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.social-links a {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin-right: 15px;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    color: var(--primary-hover);
+    transform: translateY(-3px);
+}
+
+/* Анимации */
+.fade-in {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .display-3 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section {
+        padding: 80px 0;
+    }
+}
+
+/* Дополнительные стили для карточек в галерее/каталоге */
+.product-price {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.location-badge {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.location-badge i {
+    margin-right: 5px;
+    color: var(--primary-color);
+}
+
+/* Категория (Indoor/Outdoor) */
+.category-tag {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.category-tag.indoor {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.category-tag.outdoor {
+    background-color: #4da6ff;
+    color: white;
+}
+
+/* Рейтинг звезд */
+.rating {
+    color: #ffc107;
+}
+
+/* Поиск и фильтры в стиле Hati */
+.search-box {
+    display: flex;
+    background-color: white;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.search-input {
+    flex-grow: 1;
+    border: none;
+    padding: 15px 20px;
+    font-size: 1rem;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.search-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.category-btn {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: none;
+    padding: 15px 20px;
+    font-weight: 500;
+    border-right: 1px solid #eee;
+}
+
+.category-btn i {
+    margin-right: 10px;
+}
+
+/* Таблица для календаря */
+.calendar-container {
+    background-color: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.calendar-nav {
+    display: flex;
+}
+
+.calendar-nav-btn {
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.calendar-nav-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-table th {
+    text-align: center;
+    padding: 10px;
+    font-weight: 500;
+    color: #666;
+}
+
+.calendar-table td {
+    text-align: center;
+    padding: 8px;
+}
+
+.calendar-day {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.calendar-day:hover {
+    background-color: #f0f0f0;
+}
+
+.calendar-day.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+}
+
+/* Стили для вкладок (Terbaru, Popular и т.д.) */
+.tabs-container {
+    display: flex;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.tab-item {
+    padding: 15px 25px;
+    font-weight: 500;
+    color: #666;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-item:hover {
+    color: var(--primary-color);
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+}
+
+.tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+/* Корзина/Коллекция */
+.cart-image {
+    height: 150px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.note-text {
+    max-height: 80px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    font-size: 0.9rem;
+}
+
+/* Basket button in fixed position (like in Hati) */
+.basket-fixed {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: white;
+    border-radius: 30px;
+    padding: 10px 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.basket-fixed:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.basket-fixed i {
+    color: var(--primary-color);
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.basket-count {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+/* Переопределение bootstrap цветов */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.border-primary {
+    border-color: var(--primary-color) !important;
+}

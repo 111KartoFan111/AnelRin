@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if task %}Редактирование задачи{% else %}Новая задача{% endif %} | Wedding Planner
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    {% if task %}
+                        <i class="fas fa-edit me-2"></i>Редактирование задачи
+                    {% else %}
+                        <i class="fas fa-plus me-2"></i>Новая задача
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group mt-3">
+                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                        <a href="{% url 'checklist' %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

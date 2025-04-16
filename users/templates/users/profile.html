@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Профиль | Wedding Planner{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Мой профиль</h3>
+            </div>
+            <div class="card-body text-center">
+                <img class="rounded-circle img-fluid mb-3" width="150" height="150" src="{{ user.profile.image.url }}" alt="{{ user.username }}">
+                <h4 class="card-title">{{ user.username }}</h4>
+                <p class="card-text">{{ user.email }}</p>
+                {% if user.profile.phone %}
+                    <p class="card-text"><i class="fas fa-phone text-primary me-2"></i>{{ user.profile.phone }}</p>
+                {% endif %}
+                
+                {% if has_wedding %}
+                    <a href="{% url 'wedding_edit' %}" class="btn btn-outline-primary mt-2">
+                        <i class="fas fa-edit me-1"></i> Редактировать свадьбу
+                    </a>
+                {% else %}
+                    <a href="{% url 'wedding_create' %}" class="btn btn-primary mt-2">
+                        <i class="fas fa-heart me-1"></i> Создать свадьбу
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Настройки профиля</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Основная информация</legend>
+                        {{ user_form|crispy }}
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Дополнительная информация</legend>
+                        {{ profile_form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Сохранить изменения</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

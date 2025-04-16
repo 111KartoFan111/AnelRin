@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Чек-лист | Wedding Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+    .task-card {
+        transition: all 0.2s ease;
+    }
+
+    .task-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .task-completed {
+        background-color: #f8f9fa;
+    }
+
+    .task-completed .task-title {
+        text-decoration: line-through;
+        color: #6c757d;
+    }
+
+    .priority-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .priority-4 {
+        background-color: #dc3545; /* Срочный */
+    }
+
+    .priority-3 {
+        background-color: #fd7e14; /* Высокий */
+    }
+
+    .priority-2 {
+        background-color: #ffc107; /* Средний */
+    }
+
+    .priority-1 {
+        background-color: #20c997; /* Низкий */
+    }
+
+    .task-overdue {
+        border-left: 4px solid #dc3545;
+    }
+
+    .checkbox-lg {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h1><i class="fas fa-tasks me-2"></i>Мой чек-лист</h1>
+        <p class="text-muted">
+            До свадьбы осталось: 
+            <strong>
+                {% with days_left=wedding.date|timeuntil %}
+                    {{ days_left }}
+                {% endwith %}
+            </strong>
+        </p>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{% url 'task_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Добавить задачу
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">Информация о свадьбе</h5>
+                    </div>
+                    <div>
+                        <a href="{% url 'wedding_edit' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit me-1"></i>Редактировать
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <small class="text-muted d-block">Дата свадьбы</small>
+                        <strong>{{ wedding.date|date:"d.m.Y" }}</strong>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <small class="text-muted d-block">Стиль</small>
+                        <strong>{{ wedding.get_style_display }}</strong>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <small class="text-muted d-block">Место проведения</small>
+                        <strong>{{ wedding.location|default:"Не указано" }}</strong>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <small class="text-muted d-block">Количество гостей</small>
+                        <strong>{{ wedding.guests_count }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Фильтр задач</h5>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        {{ filter_form.filter_by }}
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i>Применить
+                        </button>
+                        <a href="{% url 'checklist' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-sync-alt me-1"></i>Сбросить
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% if tasks %}
+            {% for task in tasks %}
+                <div class="card task-card mb-3 {% if task.completed %}task-completed{% endif %} {% if task.is_overdue %}task-overdue{% endif %}">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-1 text-center">
+                                <input type="checkbox" class="form-check-input checkbox-lg task-toggle"
+                                       data-task-id="{{ task.id }}"
+                                       {% if task.completed %}checked{% endif %}>
+                            </div>
+                            <div class="col-md-7">
+                                <h5 class="card-title task-title">
+                                    <span class="priority-indicator priority-{{ task.priority }}"></span>
+                                    {{ task.title }}
+                                </h5>
+                                {% if task.description %}
+                                    <p class="card-text small text-muted">{{ task.description }}</p>
+                                {% endif %}
+                                {% if task.is_overdue and not task.completed %}
+                                    <div class="badge bg-danger">Просрочено</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <div class="small text-muted">Срок</div>
+                                <strong>{{ task.due_date|date:"d.m.Y" }}</strong>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <div class="btn-group">
+                                    <a href="{% url 'task_edit' task.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger delete-task-btn"
+                                            data-bs-toggle="modal" data-bs-target="#deleteTaskModal"
+                                            data-task-id="{{ task.id }}" data-task-title="{{ task.title }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
+                    <h4>У вас пока нет задач</h4>
+                    <p class="text-muted">Создайте свою первую задачу для подготовки к свадьбе</p>
+                    <a href="{% url 'task_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Добавить задачу
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTaskModalLabel">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить задачу "<span id="deleteTaskTitle"></span>"?</p>
+                <p class="text-danger">Это действие невозможно отменить!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const taskToggleCheckboxes = document.querySelectorAll('.task-toggle');
+
+        taskToggleCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskId = this.getAttribute('data-task-id');
+                const completed = this.checked;
+
+                fetch(`/task/${taskId}/toggle/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+
+                        const taskCard = this.closest('.task-card');
+                        if (data.completed) {
+                            taskCard.classList.add('task-completed');
+                        } else {
+                            taskCard.classList.remove('task-completed');
+                        }
+
+                    } else {
+                        alert('Произошла ошибка. Попробуйте еще раз.');
+                        this.checked = !this.checked;
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка. Попробуйте еще раз.');
+                    this.checked = !this.checked;
+                });
+            });
+        });
+
+        const deleteTaskModal = document.getElementById('deleteTaskModal');
+        if (deleteTaskModal) {
+            deleteTaskModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const taskId = button.getAttribute('data-task-id');
+                const taskTitle = button.getAttribute('data-task-title');
+
+                document.getElementById('deleteTaskTitle').textContent = taskTitle;
+                document.getElementById('confirmDeleteBtn').href = `/task/${taskId}/delete/`;
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+{% endblock %}>
