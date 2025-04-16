@@ -3,11 +3,13 @@
 
 1. Клонировать репозиторий:
    ```bash
-git clone [https://github.com/your-repo/wedding-planner.git](https://github.com/your-repo/wedding-planner.git)
+    git clone [https://github.com/your-repo/wedding-planner.git](https://github.com/your-repo/wedding-planner.git)
+    ```
 
 2. Создайте виртуальное окружение Python :
     ```bash
-source venv/bin/activate
+        source venv/bin/activate
+    ```
 
 3. Установите зависимости из файла requirements.txt
     ```bash
