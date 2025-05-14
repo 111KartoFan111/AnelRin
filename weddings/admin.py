@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Wedding, Task, Reminder, ProductCategory, Product, CartItem
+from .models import Wedding, Task, Reminder, ProductCategory, Product, CartItem , GeminiChat
 
 
 @admin.register(Wedding)
@@ -14,6 +14,15 @@ class ReminderInline(admin.TabularInline):
     model = Reminder
     extra = 0
 
+@admin.register(GeminiChat)
+class GeminiChatAdmin(admin.ModelAdmin):
+    list_display = ('user', 'message_type', 'short_content', 'created_at')
+    list_filter = ('message_type', 'created_at', 'user')
+    search_fields = ('content', 'user__username')
+    
+    def short_content(self, obj):
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    short_content.short_description = 'Содержание'
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):

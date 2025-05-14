@@ -102,3 +102,20 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.product.name}'
+    
+class GeminiChat(models.Model):
+    MESSAGE_TYPES = [
+        ('user', 'Пользователь'),
+        ('assistant', 'Ассистент'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gemini_chats')
+    message_type = models.CharField(max_length=10, choices=MESSAGE_TYPES)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['created_at']
+    
+    def __str__(self):
+        return f"{self.get_message_type_display()}: {self.content[:50]}"

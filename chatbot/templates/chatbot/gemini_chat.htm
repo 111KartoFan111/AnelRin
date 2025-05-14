@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}Gemini AI Свадебный Помощник | Wedding Planner{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        height: 70vh;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    
+    .message {
+        margin-bottom: 15px;
+        max-width: 80%;
+    }
+    
+    .message-user {
+        margin-left: auto;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 18px 18px 0 18px;
+        padding: 10px 15px;
+        text-align: right;
+    }
+    
+    .message-assistant {
+        margin-right: auto;
+        background-color: white;
+        border-radius: 18px 18px 18px 0;
+        padding: 10px 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .message-time {
+        font-size: 0.7rem;
+        display: block;
+        margin-top: 5px;
+        opacity: 0.8;
+    }
+    
+    .typing-indicator {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #f0f0f0;
+        border-radius: 18px;
+        margin-bottom: 15px;
+        display: none;
+    }
+    
+    .typing-indicator span {
+        height: 8px;
+        width: 8px;
+        float: left;
+        margin: 0 1px;
+        background-color: #9E9EA1;
+        display: block;
+        border-radius: 50%;
+        opacity: 0.4;
+    }
+    
+    .typing-indicator span:nth-of-type(1) {
+        animation: 1s blink infinite .3333s;
+    }
+    
+    .typing-indicator span:nth-of-type(2) {
+        animation: 1s blink infinite .6666s;
+    }
+    
+    .typing-indicator span:nth-of-type(3) {
+        animation: 1s blink infinite .9999s;
+    }
+    
+    @keyframes blink {
+        50% {
+            opacity: 1;
+        }
+    }
+    
+    .message-assistant p {
+        margin-bottom: 10px;
+    }
+    
+    .message-assistant ul {
+        margin-bottom: 10px;
+        padding-left: 20px;
+    }
+    
+    .gemini-logo {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>
+            <img src="https://cdn.icon-icons.com/icons2/3221/PNG/512/google_gemini_logo_icon_206794.png" class="gemini-logo" alt="Gemini">
+            Свадебный помощник Gemini AI
+        </h1>
+        <p class="text-muted">Задайте вопрос, и я помогу с идеями для вашей свадьбы с помощью искусственного интеллекта</p>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if has_wedding %}
+            <div class="badge bg-primary">
+                <i class="fas fa-heart me-1"></i> Свадьба в стиле {{ wedding.get_style_display }}
+            </div>
+        {% else %}
+            <a href="{% url 'wedding_create' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-heart me-1"></i> Создать свадьбу для персонализации
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <img src="https://cdn.icon-icons.com/icons2/3221/PNG/512/google_gemini_logo_icon_206794.png" class="gemini-logo" alt="Gemini">
+                    Чат с AI-помощником
+                </h5>
+                <button type="button" class="btn btn-sm btn-light" id="clearChat">
+                    <i class="fas fa-trash me-1"></i> Очистить чат
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="chat-container" id="chatContainer">
+                    {% for message in messages %}
+                        <div class="message message-{{ message.message_type }}">
+                            {{ message.content|linebreaksbr }}
+                            <span class="message-time">{{ message.created_at|time:"H:i" }}</span>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="typing-indicator" id="typingIndicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <form id="chatForm" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        {{ form.content }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Подсказки для вопросов</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn">Идеи для декора в стиле {{ wedding.get_style_display }}</button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn">Какие цветы выбрать для букета?</button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn">Развлечения для гостей в рамках бюджета</button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn">Тренды свадебной моды 2025</button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn">Идеи для подарков гостям</button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn">Как спланировать меню?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatContainer = document.getElementById('chatContainer');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('id_content');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const clearChatBtn = document.getElementById('clearChat');
+        const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+        
+        // Прокрутка чата вниз при загрузке
+        scrollToBottom();
+        
+        // Обработка отправки сообщения
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Отправка сообщения
+            sendMessage(message);
+            
+            // Очистка поля ввода
+            messageInput.value = '';
+        });
+        
+        // Функция отправки сообщения
+        function sendMessage(message) {
+            // Получение CSRF токена
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Добавление сообщения пользователя в интерфейс
+            addMessageToChat('user', message, getCurrentTime());
+            
+            // Показываем индикатор печати
+            typingIndicator.style.display = 'inline-block';
+            scrollToBottom();
+            
+            // Отправка AJAX-запроса
+            fetch('{% url "gemini_send_message" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({
+                    'content': message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Скрываем индикатор печати
+                typingIndicator.style.display = 'none';
+                
+                if (data.status === 'success') {
+                    // Немного задержки для более естественного восприятия
+                    setTimeout(() => {
+                        // Добавление ответа бота в интерфейс
+                        addMessageToChat('assistant', data.bot_message.content, data.bot_message.created_at);
+                    }, 500);
+                } else {
+                    addMessageToChat('assistant', data.bot_message.content, data.bot_message.created_at);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                typingIndicator.style.display = 'none';
+                addMessageToChat('assistant', 'Извините, произошла ошибка. Попробуйте еще раз.', getCurrentTime());
+            });
+        }
+        
+        // Функция добавления сообщения в чат
+function addMessageToChat(type, content, time) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', `message-${type}`);
+    
+    // Форматирование текста для лучшей читаемости
+    if (type === 'assistant') {
+        // Заменяем переносы строк на HTML-теги
+        content = content.replace(/\n\n/g, '</p><p>');
+        content = content.replace(/\n/g, '<br>');
+        
+        // Форматируем маркированные списки
+        content = content.replace(/•(.*?)(?=\n•|\n\n|$)/gs, function(match, p1) {
+            return '<li>' + p1.trim() + '</li>';
+        });
+        
+        if (content.includes('<li>')) {
+            content = content.replace(/<li>(.*?)<\/li>/gs, function(match) {
+                return '<ul>' + match + '</ul>';
+            });
+            // Убираем вложенные списки
+            content = content.replace(/<ul><ul>/g, '<ul>');
+            content = content.replace(/<\/ul><\/ul>/g, '</ul>');
+        }
+        
+        // Оборачиваем весь контент в <p> если еще не обернут
+        if (!content.startsWith('<p>')) {
+            content = '<p>' + content;
+        }
+        if (!content.endsWith('</p>')) {
+            content += '</p>';
+        }
+        
+        // Исправляем двойные теги
+        content = content.replace(/<p><p>/g, '<p>');
+        content = content.replace(/<\/p><\/p>/g, '</p>');
+    } else {
+        // Для сообщений пользователя просто заменяем переносы строк
+        content = content.replace(/\n/g, '<br>');
+    }
+    
+    messageDiv.innerHTML = `
+        ${content}
+        <span class="message-time">${time}</span>
+    `;
+    
+    chatContainer.appendChild(messageDiv);
+    scrollToBottom();
+}
+        // Функция прокрутки чата вниз
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Функция получения текущего времени
+        function getCurrentTime() {
+            const now = new Date();
+            return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        
+        // Обработка нажатия на кнопки подсказок
+        suggestionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                messageInput.value = this.textContent;
+                messageInput.focus();
+            });
+        });
+        
+        // Очистка чата
+        clearChatBtn.addEventListener('click', function() {
+            if (confirm('Вы уверены, что хотите очистить историю чата?')) {
+                // Отправляем запрос на очистку истории
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                fetch('{% url "clear_chat_history" %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Очищаем контейнер чата
+                        chatContainer.innerHTML = '';
+                        
+                        // Добавляем новое приветственное сообщение
+                        addMessageToChat('assistant', data.bot_message.content, data.bot_message.created_at);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Не удалось очистить историю чата. Попробуйте еще раз.');
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

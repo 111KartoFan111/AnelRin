@@ -9,6 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+GEMINI_API_KEY = 'AIzaSyDdU9T-qN4rxCbQ_YfJ-XpwhSh70LnG2TU'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,6 +21,7 @@ INSTALLED_APPS = [
 
     'users.apps.UsersConfig',
     'weddings.apps.WeddingsConfig',
+    'chatbot.apps.ChatbotConfig',
 
     'crispy_forms',
     'crispy_bootstrap5',
@@ -33,6 +35,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'chatbot.middleware.GeminiAPIKeyMiddleware',
 ]
 
 ROOT_URLCONF = 'wedding_planner.urls'
