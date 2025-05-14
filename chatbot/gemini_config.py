@@ -12,7 +12,7 @@ def initialize_gemini():
 
 def get_gemini_model():
     # Получение модели Gemini Pro
-    return genai.GenerativeModel('gemini-2.0-flashs')
+    return genai.GenerativeModel('gemini-2.0-flash')  # Исправленное название модели
 
 def create_gemini_chat(history=None):
     # Создание чата с историей сообщений

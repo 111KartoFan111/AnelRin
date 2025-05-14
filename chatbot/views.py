@@ -15,8 +15,10 @@ def gemini_chat(request):
     # Получаем историю сообщений пользователя
     messages = GeminiChat.objects.filter(user=request.user).order_by('created_at')
     
-    if not settings.GEMINI_API_KEY or settings.GEMINI_API_KEY == 'AIzaSyDdU9T-qN4rxCbQ_YfJ-XpwhSh70LnG2TU':
-        return render(request, 'chatbot/api_key_missing.html')
+    # Проверяем валидность API-ключа
+    if not settings.GEMINI_API_KEY:
+        return redirect('api_key_required')
+        
     # Если истории нет, добавляем приветственное сообщение
     if not messages.exists():
         welcome_message = GeminiChat.objects.create(
@@ -79,43 +81,39 @@ def gemini_send_message(request):
                 Отвечай на русском языке, даже если пользователь пишет на другом языке.
                 """
                 
-                # Добавляем системный промпт в начало истории
-                history.append({"role": "system", "parts": [system_prompt]})
-                
-                # Добавляем историю сообщений (последние 10 сообщений)
-                previous_messages = GeminiChat.objects.filter(user=request.user).order_by('-created_at')[:10][::-1]
-                for msg in previous_messages:
-                    role = "user" if msg.message_type == "user" else "model"
-                    history.append({"role": role, "parts": [msg.content]})
-                
-                # Получаем модель и отправляем запрос
-                model = get_gemini_model()
-                response = model.generate_content(
-                    history + [{"role": "user", "parts": [user_message.content]}]
-                )
-                
-                # Сохраняем ответ от Gemini
-                bot_response = response.text
-                bot_message = GeminiChat.objects.create(
-                    user=request.user,
-                    message_type='assistant',
-                    content=bot_response
-                )
-                
-                return JsonResponse({
-                    'status': 'success',
-                    'user_message': {
-                        'content': user_message.content,
-                        'created_at': user_message.created_at.strftime('%H:%M')
-                    },
-                    'bot_message': {
-                        'content': bot_message.content,
-                        'created_at': bot_message.created_at.strftime('%H:%M')
-                    }
-                })
+                # Получаем модель и отправляем запрос (с отладочной информацией)
+                print(f"API key is set: {bool(settings.GEMINI_API_KEY)}")
+                try:
+                    model = get_gemini_model()
+                    
+                    # Формируем запрос к модели
+                    response = model.generate_content(system_prompt + "\n\nВопрос пользователя: " + user_message.content)
+                    
+                    # Сохраняем ответ от Gemini
+                    bot_response = response.text
+                    bot_message = GeminiChat.objects.create(
+                        user=request.user,
+                        message_type='assistant',
+                        content=bot_response
+                    )
+                    
+                    return JsonResponse({
+                        'status': 'success',
+                        'user_message': {
+                            'content': user_message.content,
+                            'created_at': user_message.created_at.strftime('%H:%M')
+                        },
+                        'bot_message': {
+                            'content': bot_message.content,
+                            'created_at': bot_message.created_at.strftime('%H:%M')
+                        }
+                    })
+                except Exception as e:
+                    print(f"Error with Gemini model: {str(e)}")
+                    raise  # Пробросить ошибку дальше для обработки в основном блоке except
                 
             except Exception as e:
-                print(f"Error: {str(e)}")
+                print(f"Detailed error: {str(e)}")
                 # В случае ошибки с Gemini API, используем резервный ответ
                 fallback_response = "Извините, в данный момент я не могу обработать ваш запрос. Пожалуйста, попробуйте позже."
                 bot_message = GeminiChat.objects.create(

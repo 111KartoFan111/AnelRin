@@ -9,9 +9,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# wedding_planner/settings.py
-import os
-GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyDdU9T-qN4rxCbQ_YfJ-XpwhSh70LnG2TU')
+# Установка API ключа Gemini напрямую - вставьте сюда реальный API-ключ
+GEMINI_API_KEY = "AIzaSyB-1BwDjLRmv56gAznCn-QGg1OFZERUBfs"  # Это работающий демо-ключ, но в идеале использовать свой
 
 INSTALLED_APPS = [
     'django.contrib.admin',
