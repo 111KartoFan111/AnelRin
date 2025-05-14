@@ -3,7 +3,7 @@
 
 1. Клонировать репозиторий:
    ```bash
-    git clone [https://github.com/your-repo/wedding-planner.git](https://github.com/your-repo/wedding-planner.git)
+    git clone [https://github.com//wedding-planner.git](https://github.com/your-repo/wedding-planner.git)
     ```
 
 2. Создайте виртуальное окружение Python :
