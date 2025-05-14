@@ -8,7 +8,7 @@ class GeminiAPIKeyMiddleware:
 
     def __call__(self, request):
         # Проверка запросов к Gemini API
-        if request.path.startswith('/gemini/') and (not settings.GEMINI_API_KEY or settings.GEMINI_API_KEY == 'YOUR_GEMINI_API_KEY'):
+        if request.path.startswith('/gemini/') and (not settings.GEMINI_API_KEY or settings.GEMINI_API_KEY == 'AIzaSyDdU9T-qN4rxCbQ_YfJ-XpwhSh70LnG2TU'):
             # Если путь не ведет на страницу с сообщением о необходимости API-ключа
             if not request.path.endswith('/api-key-required/'):
                 return redirect(reverse('api_key_required'))

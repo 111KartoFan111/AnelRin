@@ -3,11 +3,16 @@ from django.conf import settings
 
 def initialize_gemini():
     # Инициализация API-ключа
-    genai.configure(api_key=settings.GEMINI_API_KEY)
+    try:
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+        return True
+    except Exception as e:
+        print(f"Error initializing Gemini API: {e}")
+        return False
 
 def get_gemini_model():
     # Получение модели Gemini Pro
-    return genai.GenerativeModel('gemini-1.5-pro')
+    return genai.GenerativeModel('gemini-2.0-flashs')
 
 def create_gemini_chat(history=None):
     # Создание чата с историей сообщений

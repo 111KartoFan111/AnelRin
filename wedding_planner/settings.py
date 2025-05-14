@@ -9,7 +9,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-GEMINI_API_KEY = 'AIzaSyDdU9T-qN4rxCbQ_YfJ-XpwhSh70LnG2TU'
+# wedding_planner/settings.py
+import os
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AIzaSyDdU9T-qN4rxCbQ_YfJ-XpwhSh70LnG2TU')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
